@@ -5,6 +5,8 @@
 #include <cr_section_macros.h>
 #include <print.h>
 
+#define	DS3231_SLAVE_ADDR	0x68
+
 const char str_ready[] = "ready!\r\n";
 const char str_crlf[] = "\r\n";
 const char str_space[] = " ";
@@ -41,9 +43,20 @@ int main(void)
     {
     	if(currentticks != ticks)
     	{
+    		uint8_t rtc_data[4];
     		currentticks = ticks;
 			Chip_GPIO_SetPinToggle(LPC_GPIO, LED_PORT, LED_PIN);
 			print_dec_u16(currentticks);
+			// read out first register
+			Chip_I2C_MasterCmdRead(I2C0, DS3231_SLAVE_ADDR, 0x00, rtc_data, sizeof(rtc_data));
+			Chip_UART_SendRB(LPC_USART, &txring, str_space, sizeof(str_space) - 1);
+			print_hex_u8(rtc_data[0]);
+			Chip_UART_SendRB(LPC_USART, &txring, str_space, sizeof(str_space) - 1);
+			print_hex_u8(rtc_data[1]);
+			Chip_UART_SendRB(LPC_USART, &txring, str_space, sizeof(str_space) - 1);
+			print_hex_u8(rtc_data[2]);
+			Chip_UART_SendRB(LPC_USART, &txring, str_space, sizeof(str_space) - 1);
+			print_hex_u8(rtc_data[3]);
 			Chip_UART_SendRB(LPC_USART, &txring, str_crlf, sizeof(str_crlf) - 1);
     	}
     }
