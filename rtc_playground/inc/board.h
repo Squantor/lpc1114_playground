@@ -18,6 +18,8 @@
 #define UART_RRB_SIZE 	32	/* Receive */
 // uart speeds
 #define UART_SPEED		115200
+// commandline size, always make it a power of 2
+#define	CMDLINEMAX		32
 
 /* i2c settings */
 #define	I2C_SPEED		100000
