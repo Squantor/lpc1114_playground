@@ -2,6 +2,7 @@
 #define PRINT_H
 
 #include <stdint.h>
+#include <ringbuffers.h>
 
 #define	PRINT(buf, size) (Chip_UART_SendRB(LPC_USART, &txring, buf, size))
 

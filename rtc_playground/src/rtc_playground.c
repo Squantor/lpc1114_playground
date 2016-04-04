@@ -2,8 +2,10 @@
 #include "chip.h"
 #include <board.h>
 #include <board_init.h>
+#include <ringbuffers.h>
 #include <cr_section_macros.h>
 #include <print.h>
+#include <commandline.h>
 
 #define	DS3231_SLAVE_ADDR	0x68
 
@@ -29,6 +31,8 @@ void I2C_IRQHandler(void)
 	Chip_I2C_MasterStateHandler(I2C0);
 }
 
+
+
 int main(void)
 {
 	uint16_t currentticks = 0;
@@ -41,6 +45,7 @@ int main(void)
 
     while(1)
     {
+    	/*
     	if(currentticks != ticks)
     	{
     		uint8_t rtc_data[4];
@@ -59,6 +64,9 @@ int main(void)
 			print_hex_u8(rtc_data[3]);
 			Chip_UART_SendRB(LPC_USART, &txring, str_crlf, sizeof(str_crlf) - 1);
     	}
+    	*/
+    	commandline();
+
     }
     return 0 ;
 }

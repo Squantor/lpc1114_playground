@@ -1,10 +1,7 @@
 #include <chip.h>
 #include <board.h>
 #include <board_init.h>
-
-/* Transmit and receive buffers */
-static uint8_t rxbuff[UART_RRB_SIZE], txbuff[UART_SRB_SIZE];
-RINGBUFF_T txring, rxring;
+#include <ringbuffers.h>
 
 void board_init(void)
 {

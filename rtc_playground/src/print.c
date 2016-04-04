@@ -1,5 +1,6 @@
 #include <chip.h>
 #include <board_init.h>
+#include <ringbuffers.h>
 #include <print.h>
 
 const uint8_t hextable[] = "0123456789ABCDEF";
