@@ -6,13 +6,7 @@
 #include <cr_section_macros.h>
 #include <print.h>
 #include <commandline.h>
-
-#define	DS3231_SLAVE_ADDR	0x68
-
-const char str_ready[] = "ready!\r\n";
-const char str_crlf[] = "\r\n";
-const char str_space[] = " ";
-const char str_separator[] = ";";
+#include <strings.h>
 
 volatile static uint16_t ticks = 0;
 
@@ -31,8 +25,6 @@ void I2C_IRQHandler(void)
 	Chip_I2C_MasterStateHandler(I2C0);
 }
 
-
-
 int main(void)
 {
 	uint16_t currentticks = 0;
@@ -41,7 +33,7 @@ int main(void)
 
 	__enable_irq();
 
-	Chip_UART_SendRB(LPC_USART, &txring, str_ready, sizeof(str_ready) - 1);
+	Chip_UART_SendRB(LPC_USART, &txring, str_ready, sizeof(str_ready));
 
     while(1)
     {

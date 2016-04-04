@@ -4,6 +4,6 @@
 #include <stdint.h>
 #include <board.h>
 
-void commandparse(char *s);
+void commandparse(char *s, int size);
 
 #endif

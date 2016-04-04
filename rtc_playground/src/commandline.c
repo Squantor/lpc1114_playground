@@ -5,9 +5,7 @@
 #include <board.h>
 
 // feature set wanted
-// commandline editing
 // up/down selecting emitting last commandlines
-// local echo
 
 void commandline(void)
 {
@@ -22,17 +20,16 @@ void commandline(void)
 		if(c == '\b')
 		{
 			// remove last character (unless its the last char)
-			if((p - 1) > charbuffer)
+			if(p > charbuffer)
 			{
 				p--;
 			}
 			else
-			{
 				c = '\a'; // audio warning for bel
-			}
-		} else if(c == '\n')
+		} else if(c == '\r')
 		{
-
+			commandparse(charbuffer, p - charbuffer);
+			p = charbuffer;
 		} else
 		{
 			// enough space for character?
@@ -43,9 +40,7 @@ void commandline(void)
 				p++;
 			}
 			else
-			{
 				c = '\a'; // audio warning for bel
-			}
 		}
 		Chip_UART_SendRB(LPC_USART, &txring, &c, sizeof(c));
 	}

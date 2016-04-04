@@ -23,9 +23,13 @@
 
 /* i2c settings */
 #define	I2C_SPEED		100000
+// I2C device addresses
+#define	DS3231_SLAVE_ADDR	0x68
+
 
 /* SPI settings*/
 #define	SSP_SPEED		50000
 #define	SSP_DATA_BITS	SSP_BITS_8
+
 
 #endif
