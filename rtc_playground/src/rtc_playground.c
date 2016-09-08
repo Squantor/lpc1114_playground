@@ -27,7 +27,7 @@ void I2C_IRQHandler(void)
 
 int main(void)
 {
-	uint16_t currentticks = 0;
+	//uint16_t currentticks = 0;
 
 	board_init();
 
