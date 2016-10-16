@@ -26,8 +26,10 @@ SOFTWARE.
 #define STRINGS_H
 
 extern const char str_ready[8];
+extern const char str_okay[3];
 extern const char str_crlf[2];
 extern const char str_space[1];
+extern const char str_dot[1];
 extern const char str_separator[1];
 
 #endif
