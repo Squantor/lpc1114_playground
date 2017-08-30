@@ -34,7 +34,16 @@
 #define	BL_ON			(1 << 5)
 #define	BL_DIM			(1 << 6)
 
+#define INT_PORT		0
+#define	INT_PIN			3
+
 // PCF2119 controller
 #define	LCD_ADDR		0x3B
+#define	LCD_I_WR		0x00
+#define	LCD_D_WR		0x40
+#define LCD_FSET_NORM	0x34
+#define LCD_FSET_EXT	0x35
+#define LCD_UPCASE(x)	((x + 0x60))
+#define	LCD_SPACE		0xA0
 
 #endif
