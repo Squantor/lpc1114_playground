@@ -1,13 +1,15 @@
 # Project settings
 BIN_NAME = lpc_1114_302_frame_C
 MCU = lpc1114_302
+BOARD = BREADBOARD
 SOURCES = src/cr_startup_lpc11xx.c src/sysinit.c src/main.c src/crp.c src/print.c src/board_init.c
-INCLUDES = -Iinc -I"lpc_chip_11cxx/inc/"
+
+INCLUDES = -Iinc -I"../lpc_chip_11cxx/inc/" -I"../squantlibraries/sqlibembedded/inc"
 LDSCRIPT = -T"ld/nxp_$(MCU).ld"
-RLIBDIR = -L"lpc_chip_11cxx/bin/release"
-RLIBS = -llpc_chip_11cxx
-DLIBDIR = -L"lpc_chip_11cxx/bin/debug"
-DLIBS = -llpc_chip_11cxx
+RLIBDIR = -L"../lpc_chip_11cxx/bin/release" -L"../squantlibraries/sqlibembedded/arm-none-eabi_CM0/bin/release"
+RLIBS = -llpc_chip_11cxx -lsqlibembedded
+DLIBDIR = -L"../lpc_chip_11cxx/bin/debug" -L"../squantlibraries/sqlibembedded/arm-none-eabi_CM0/bin/debug"
+DLIBS = -llpc_chip_11cxx -lsqlibembedded 
 
 
 # Toolchain settings
@@ -22,14 +24,14 @@ OBJDUMP = objdump
 OBJCOPY = objcopy
 
 # Toolchain flags
-COMPILE_FLAGS = -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -std=c11 -mcpu=cortex-m0 -mthumb
+COMPILE_FLAGS = -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -std=c11 -mcpu=cortex-m0 -mthumb -D$(BOARD)
 DEFINES = -DCORE_M0 -Dbreadboard
 RDEFINES = -DNDEBUG -DNO_BOARD_LIB -D__CODE_RED
 DDEFINES = -DDEBUG -DNO_BOARD_LIB -D__CODE_RED
 RCOMPILE_FLAGS = $(DEFINES) $(RDEFINES) -Os
 DCOMPILE_FLAGS = $(DEFINES) $(DDEFINES) -g3 -O0
 
-LINK_FLAGS = -nostdlib -Xlinker --gc-sections -Xlinker -print-memory-usage -mcpu=cortex-m0 -mthumb
+LINK_FLAGS = -nostdlib -Xlinker --cref -Xlinker --gc-sections -Xlinker -print-memory-usage -mcpu=cortex-m0 -mthumb
 RLINK_FLAGS =
 DLINK_FLAGS =
 
@@ -72,14 +74,16 @@ DEPS = $(OBJECTS:.o=.d)
 .PHONY: release
 release: dirs
 	# make lpc_chip library if needed
-	$(MAKE) -C lpc_chip_11cxx release
+	$(MAKE) -C ../lpc_chip_11cxx release
+	$(MAKE) -C ../squantlibraries/sqlibembedded/arm-none-eabi_CM0 release
 	$(MAKE) all --no-print-directory
 
 # Debug build for gdb debugging
 .PHONY: debug
 debug: dirs
 	# make lpc_chip library if needed
-	$(MAKE) -C lpc_chip_11cxx debug
+	$(MAKE) -C ../lpc_chip_11cxx debug
+	$(MAKE) -C ../squantlibraries/sqlibembedded/arm-none-eabi_CM0 debug
 	$(MAKE) all --no-print-directory
 
 # Create the directories used in the build
@@ -97,18 +101,18 @@ clean:
 	$(RM) -r bin
 
 # Main rule, checks the executable and symlinks to the output
-all: $(BIN_PATH)/$(BIN_NAME).elf
+all: $(BIN_PATH)/$(BIN_NAME).axf
 
 # create the executable
-$(BIN_PATH)/$(BIN_NAME).elf: $(OBJECTS)
+$(BIN_PATH)/$(BIN_NAME).axf: $(OBJECTS)
 	$(CXX_PREFIX)$(CXX) $(LDFLAGS) $(OBJECTS) -Xlinker -Map="$(BIN_PATH)/$(BIN_NAME).map" -o $@ $(LIBS)
 	# dump size and log to file
-	$(CXX_PREFIX)$(SIZE) $@
+	$(CXX_PREFIX)$(SIZE) $(BIN_PATH)/$(BIN_NAME).axf
 	date >> size$(BUILD_TARGET).log
-	$(CXX_PREFIX)$(SIZE) $@ >> size$(BUILD_TARGET).log
+	$(CXX_PREFIX)$(SIZE) $(BIN_PATH)/$(BIN_NAME).axf >> size$(BUILD_TARGET).log
 	# create the various output files
-	$(CXX_PREFIX)$(OBJCOPY) -R .stack -O binary $@ $(BIN_PATH)/$(BIN_NAME).bin
-	$(CXX_PREFIX)$(OBJDUMP) -h -S "$@" > "$(BIN_PATH)/$(BIN_NAME).lss"
+	$(CXX_PREFIX)$(OBJCOPY) -R .stack -O binary $(BIN_PATH)/$(BIN_NAME).axf $(BIN_PATH)/$(BIN_NAME).bin
+	$(CXX_PREFIX)$(OBJDUMP) -h -S "$(BIN_PATH)/$(BIN_NAME).axf" > "$(BIN_PATH)/$(BIN_NAME).lss"
 
 # Add dependency files, if they exist
 -include $(DEPS)
