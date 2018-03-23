@@ -1,0 +1,24 @@
+#executables
+bin/
+
+# Object files
+*.o
+*.elf
+build/
+
+# Linker output
+*.map
+
+# Libraries
+*.a
+
+# Executables
+*.hex
+bin/
+
+#MCUexpresso stuff
+*.launch
+
+#logs
+*.log
+
